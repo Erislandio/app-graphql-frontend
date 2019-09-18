@@ -15,14 +15,13 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
 import PeopleIcon from "@material-ui/icons/People";
 import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
 import PictureInPictureAltIcon from "@material-ui/icons/PictureInPictureAlt";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import AccountBalanceWalletIcon from "@material-ui/icons/AccountBalanceWallet";
 import LaptopChromebookIcon from "@material-ui/icons/LaptopChromebook";
+import { Link } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -80,6 +79,13 @@ const useStyles = makeStyles(theme => ({
       duration: theme.transitions.duration.enteringScreen
     }),
     marginLeft: 0
+  },
+  link: {
+      textDecoration: 'none',
+      color: 'rgba(0,0,0,0.87)',
+      display: 'flex',
+      alignItems: 'center',
+      width: '100%'
   }
 }));
 
@@ -189,21 +195,19 @@ export default function PersistentDrawerLeft() {
         <Divider />
         <List>
           {menuItems.map((item, index) => (
-            <ListItem button key={item.id}>
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.name} />
+            <ListItem button key={index} onClick={handleDrawerClose}>
+              <Link to={item.link} className={classes.link}>
+                <ListItemIcon>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.name} />
+              </Link>
             </ListItem>
           ))}
         </List>
         <Divider />
         <List>
           {otherLinks.map((item, index) => (
-            <ListItem button key={item.id}>
-              <ListItemIcon>
-                  {
-                      item.icon
-                  }
-              </ListItemIcon>
+            <ListItem button key={index} onClick={handleDrawerClose}>
+              <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.name} />
             </ListItem>
           ))}
