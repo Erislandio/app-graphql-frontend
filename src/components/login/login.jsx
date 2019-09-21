@@ -1,5 +1,194 @@
-import React from "react";
+import React, { useState } from "react";
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import TextField from "@material-ui/core/TextField";
+import Link from "@material-ui/core/Link";
+import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
+import { graphql } from "react-apollo";
+import { login } from "../../mutations/login.js";
+import { useMutation } from "@apollo/react-hooks";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Message from "./Message";
+import Cookie from 'js-cookie'
 
-export const Login = () => {
-  return <div>Login</div>;
+function Copyright() {
+  return (
+    <Typography variant="body2" color="textSecondary" align="center">
+      {"Copyright © "}
+      <Link color="inherit" href="https://material-ui.com/">
+        Your Website
+      </Link>{" "}
+      {new Date().getFullYear()}
+      {"."}
+    </Typography>
+  );
+}
+
+const useStyles = makeStyles(theme => ({
+  "@global": {
+    body: {
+      backgroundColor: theme.palette.common.white
+    }
+  },
+  paper: {
+    marginTop: theme.spacing(8),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main
+  },
+  form: {
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing(1)
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2)
+  },
+  loading: {
+    marginTop: "40px"
+  }
+}));
+
+const userState = {
+  email: "",
+  password: ""
 };
+
+const message = {
+  message: "",
+  open: false
+};
+
+const SignIn = () => {
+  const [loginMutation, data] = useMutation(login);
+  const classes = useStyles();
+  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState(userState);
+  const [open, setOpen] = useState(message);
+
+  const handleSubmit = async event => {
+    event.preventDefault();
+    const { email, password } = user;
+    setLoading(true);
+
+    try {
+      await loginMutation({
+        variables: {
+          email,
+          password
+        }
+      }).then(({ data: { login } }) => {
+        if (!login.user) {
+          setOpen({
+            ...open,
+            open: true,
+            message: login.message
+          });
+          setLoading(false);
+        } else {
+          Cookie.set('_id', login.user._id)
+          window.location.href = "/console";
+        }
+      });
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+
+  const handleChange = e => {
+    setUser({
+      ...user,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  console.log(user);
+
+  return (
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div className={classes.paper}>
+        <Avatar className={classes.avatar}>
+          <LockOutlinedIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Sign in
+        </Typography>
+        {loading ? (
+          <CircularProgress className={classes.loading} />
+        ) : (
+          <form
+            className={classes.form}
+            noValidate
+            onSubmit={event => handleSubmit(event)}
+          >
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required={true}
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              value={user.email}
+              autoComplete="email"
+              autoFocus
+              onChange={e => handleChange(e)}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required={true}
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              value={user.password}
+              autoComplete="current-password"
+              onChange={e => handleChange(e)}
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              disabled={loading}
+              color="primary"
+              className={classes.submit}
+            >
+              Login
+            </Button>
+            <Grid container>
+              <Grid item xs>
+                <Link href="#" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link href="#" variant="body2">
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </Grid>
+            </Grid>
+          </form>
+        )}
+      </div>
+      <Message open={open} handleClose={setOpen} />
+      <Box mt={8}>
+        <Copyright />
+      </Box>
+    </Container>
+  );
+};
+
+export default graphql(login, { name: "login" })(SignIn);
