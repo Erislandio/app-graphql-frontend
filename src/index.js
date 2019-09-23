@@ -13,7 +13,7 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 const cache = new InMemoryCache();
 
 const httpLink = createHttpLink({
-  uri: "http://localhost:4000/graphql"
+  uri: "https://app-graphql-eris.herokuapp.com/graphql"
 });
 
 const client = new ApolloClient({
