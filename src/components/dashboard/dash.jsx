@@ -1,21 +1,15 @@
 import React from "react";
-import { user } from "../../queries/user";
-import { useQuery } from "@apollo/react-hooks";
+import { Route } from "react-router-dom";
+import Breadcrumb from '../../components/breadcrumb/Breadcrumb'
 
-export const Dashboard = ({ id }) => {
-  const { loading, error, data } = useQuery(user, {
-    variables: { id }
-  });
+const Dashboard = (props) => {
 
-  if (loading) {
-    return <p>carregando</p>;
-  }
-
-  if (error) {
-    return "error";
-  }
-
-  console.log(data);
-
-  return <div>Dah</div>;
+  return (
+    <div>
+      <Breadcrumb />
+      <Route />
+    </div>
+  )
 };
+
+export default Dashboard;

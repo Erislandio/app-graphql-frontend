@@ -2,10 +2,11 @@ import React from "react";
 import Header from "./components/header/Header";
 import { Route } from "react-router-dom";
 import Login from "./components/login/login";
-import { Dashboard } from "./components/dashboard/dash";
+import  Dashboard  from "./components/dashboard/dash";
 import Cookie from "js-cookie";
 import { graphql } from "react-apollo";
 import { user } from "./queries/user";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 class App extends React.Component {
   constructor(props) {
@@ -23,11 +24,14 @@ class App extends React.Component {
   }
 
   render() {
-    console.log(this);
     const { id } = this.state;
     const {
-      data: { user }
+      data: { user, loading }
     } = this.props;
+
+    if (loading) {
+      return <CircularProgress />;
+    }
 
     return (
       <div className="App">
@@ -47,5 +51,7 @@ export default graphql(user, {
     },
     awaitRefetchQueries: () => {}
   },
-  skip: () => {}
+  skip: () => {
+    return Cookie.get("_id") ? false : true;
+  }
 })(App);
