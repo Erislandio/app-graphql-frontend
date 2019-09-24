@@ -103,6 +103,12 @@ const menuItems = [
     link: "/departament"
   },
   {
+    id: 2,
+    name: "Criar departamento",
+    icon: <SportsEsportsIcon />,
+    link: "/departament"
+  },
+  {
     id: 3,
     name: "Categorias",
     icon: <AccountBalanceWalletIcon />,

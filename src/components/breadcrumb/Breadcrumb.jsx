@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
-import Link from "@material-ui/core/Link";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -15,29 +15,19 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function handleClick(event) {
-  event.preventDefault();
-  alert("You clicked a breadcrumb.");
-}
-
-export default function SimpleBreadcrumbs() {
+export default function SimpleBreadcrumbs(props) {
   const classes = useStyles();
+
+  console.log(props);
 
   return (
     <div className={classes.root}>
       <Paper elevation={0} className={classes.paper}>
         <Breadcrumbs aria-label="breadcrumb">
-          <Link color="inherit" href="/" onClick={handleClick}>
+          <Link color="inherit" to="/">
             home
           </Link>
-          <Link
-            color="inherit"
-            href="/getting-started/installation/"
-            onClick={handleClick}
-          >
-            Core
-          </Link>
-          <Typography color="textPrimary">Breadcrumb</Typography>
+          <Typography color="textPrimary">{props.path.pop()}</Typography>
         </Breadcrumbs>
       </Paper>
       <br />
